@@ -4,6 +4,8 @@ import cPickle as pickle
 from os import path
 from os import walk
 from os import listdir
+import os
+from keras import backend as K
 from keras.datasets import cifar10
 from keras.models import Sequential
 from keras.layers import Dense
@@ -15,7 +17,7 @@ from keras.layers.convolutional import Convolution2D
 from keras.layers.convolutional import MaxPooling2D
 from keras.models import load_model
 from keras.utils import np_utils
-from keras import backend as K
+
 
 
 # (X_train1, y_train1), (X_test1, y_test1) = cifar10.load_data()
@@ -30,21 +32,15 @@ seed = 7
 np.random.seed(seed)
 
 # Load training data
-prestring0 = 'trainingData2/0/img' #x.png for open hand
-prestring1 = 'trainingData2/1/img' #x.png for closed hand
-postString = '.png'
 
-imNum0 = 10000
-imNum1 = 10000
 
-shape0 = (imNum0, 32, 32, 3)
-rootdir = 'C:/Users/sid/Desktop/test'
+rootdir = 'C:\Users\gary\Documents\1DOCUMENTS\Junior\ML\Facesimile\cohn-kanade-images'
 
 for subdir, dirs, files in os.walk(rootdir):
     for file in files:
         print path.join(subdir, file)
 
-num_classes = 2
+'''num_classes = 2
 X_train = np.ndarray(shape0)
 y_train = np.ndarray((imNum0))
 
@@ -66,7 +62,8 @@ for x in range(0, imNum1): #for each image in trainingData/0/*
     y_train[count] = 1
 
     count += 1
-
+	'''
+'''
 X_train = X_train[:count]
 y_train = y_train[:count]
 # normalize inputs from 0-255 to 0.0-1.0
@@ -77,18 +74,9 @@ X_train = X_train / 255.0
 # one hot encode outputs
 y_train = y_train.reshape((-1, 1))
 #y_train = np_utils.to_categorical(y_train)
-
+'''
 # Create the model
-#shallow model
-'''model = Sequential()
-model.add(Convolution2D(32, 3, 3, input_shape=(32, 32, 3), border_mode='same', activation='relu', W_constraint=maxnorm(3)))
-model.add(Dropout(0.2))
-model.add(Convolution2D(32, 3, 3, activation='relu', border_mode='same', W_constraint=maxnorm(3)))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Flatten())
-model.add(Dense(512, activation='relu', W_constraint=maxnorm(3)))
-model.add(Dropout(0.5))
-model.add(Dense(num_classes, activation='softmax'))'''
+
 
 '''#deeper model
 model = Sequential()
@@ -112,6 +100,7 @@ model.add(Dense(512, activation='relu', W_constraint=maxnorm(3)))
 model.add(Dropout(0.2))
 model.add(Dense(num_classes, activation='softmax'))'''
 
+'''
 model = load_model('model2deep.dat')
 
 # Compile model
@@ -131,6 +120,7 @@ model.fit(X_train, y_train, batch_size=32, nb_epoch=epochs, verbose=1, callbacks
 model.save('model3deep.dat')
 
 print model.predict_proba(X_train[930:1000], batch_size=32, verbose=1)
+'''
 """
 # Final evaluation of the model
 scores = model.evaluate(X_test, y_test, verbose=0)
