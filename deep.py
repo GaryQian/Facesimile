@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import cPickle as pickle
 from os import path
+from os import walk
 from os import listdir
 from keras.datasets import cifar10
 from keras.models import Sequential
@@ -31,16 +32,17 @@ np.random.seed(seed)
 # Load training data
 prestring0 = 'trainingData2/0/img' #x.png for open hand
 prestring1 = 'trainingData2/1/img' #x.png for closed hand
-#prestring2 = 'trainingData/2/img' #x.png
-#prestring3 = 'trainingData/3/img' #x.png
 postString = '.png'
 
-# imNum0 = len(fnmatch.filter(os.listdir('trainingData/0'), '*.png'))
-# imNum1 = len(fnmatch.filter(os.listdir('trainingData/0'), '*.png'))
 imNum0 = 10000
 imNum1 = 10000
 
 shape0 = (imNum0, 32, 32, 3)
+rootdir = 'C:/Users/sid/Desktop/test'
+
+for subdir, dirs, files in os.walk(rootdir):
+    for file in files:
+        print path.join(subdir, file)
 
 num_classes = 2
 X_train = np.ndarray(shape0)
