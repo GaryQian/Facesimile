@@ -18,6 +18,8 @@ from keras.layers.convolutional import MaxPooling2D
 from keras.models import load_model
 from keras.utils import np_utils
 
+from imgProcessing import get400
+
 
 
 # (X_train1, y_train1), (X_test1, y_test1) = cifar10.load_data()
@@ -34,34 +36,58 @@ np.random.seed(seed)
 # Load training data
 
 
-rootdir = 'C:\Users\gary\Documents\1DOCUMENTS\Junior\ML\Facesimile\cohn-kanade-images'
-
+rootdir = 'C:/Users/gary/Documents/1DOCUMENTS/Junior/ML/Facesimile/cohn-kanade-images'
+print "test"
 for subdir, dirs, files in os.walk(rootdir):
-    for file in files:
-        print path.join(subdir, file)
+	#print "3"
+	for file in files:
+		fname = path.join(subdir, file)
+		if 'DS_Store' not in fname and '.png' in fname:
+			img = cv2.imread(fname)
+			labelpath = fname[:-4] + '_emotion.txt'
+			img = get400(img)
+			
+print "test"
 
+
+'''for subj in range(0,1000):
+	subjstr = str(subj)
+	if (subj < 10): subjstr = '00' + subjstr
+	if (subj >= 10 and subj < 100): subjstr = '0' + subjstr
+	subjstr = 'S' + subjstr
+	for i in range(15):
+		samplestr = ''
+		if (i < 10): samplestr = '00' + str(i)
+		else: samplestr = '0' + str(i)
+		dir = rootdir + '/cohn-kanade-images' + '/' + subjstr + '/' + samplestr
+		fname = dir + '/' + subjstr + '_' + samplestr + '_' + '00000' + samplestr + '.png'
+		#print fname
+		if path.exists(fname):
+			pass
+			#labelpath = fname[:-4] + '_emotion.txt
+			#print labelpath'''
 '''num_classes = 2
 X_train = np.ndarray(shape0)
 y_train = np.ndarray((imNum0))
 
 count = 0
 for x in range(0, imNum0): #for each image in trainingData/0/*
-  fname = prestring0 + str(x) + postString
-  if path.exists(fname):
-    temp = cv2.imread(fname)
-    X_train[count] = temp
-    y_train[count] = 0
+	fname = prestring0 + str(x) + postString
+	if path.exists(fname):
+		temp = cv2.imread(fname)
+		X_train[count] = temp
+		y_train[count] = 0
 
-    count += 1
+		count += 1
 
 for x in range(0, imNum1): #for each image in trainingData/0/*
-  fname = prestring1 + str(x) + postString
-  if path.exists(fname):
-    temp = cv2.imread(fname)
-    X_train[count] = temp
-    y_train[count] = 1
+	fname = prestring1 + str(x) + postString
+	if path.exists(fname):
+		temp = cv2.imread(fname)
+		X_train[count] = temp
+		y_train[count] = 1
 
-    count += 1
+		count += 1
 	'''
 '''
 X_train = X_train[:count]
