@@ -49,4 +49,4 @@ data = dict()
 data['X'] = X
 data['y'] = y
 pickle.dump(data, open( "dataset400.dat", "wb" ))
-print 'Dumped ' + str(count) + ' images'
+print 'Pickled ' + str(count) + ' images'
