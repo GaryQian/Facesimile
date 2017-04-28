@@ -9,14 +9,6 @@ import os
 from imgProcessing import get400
 
 
-
-# (X_train1, y_train1), (X_test1, y_test1) = cifar10.load_data()
-# print(X_train1.shape)
-# print(y_train1.shape)
-
-
-K.set_image_dim_ordering('th')
-
 # fix random seed for reproducibility
 seed = 7
 np.random.seed(seed)
