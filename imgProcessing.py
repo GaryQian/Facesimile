@@ -13,6 +13,7 @@ def get400(img):
 
 	# Return a list of rectangles of detected faces
 	faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+	crop_img = None
 	for (x,y,w,h) in faces:
 	    
 	    xMid = x + w/2

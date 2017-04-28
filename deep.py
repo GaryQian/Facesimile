@@ -34,20 +34,42 @@ seed = 7
 np.random.seed(seed)
 
 # Load training data
+print 'Loading Training Data'
+rootdir = 'C:/Users/gary/Documents/1DOCUMENTS/Junior/ML/Facesimile'
 
-
-rootdir = 'C:/Users/gary/Documents/1DOCUMENTS/Junior/ML/Facesimile/cohn-kanade-images'
-print "test"
-for subdir, dirs, files in os.walk(rootdir):
+X = []
+y = []
+count = 0
+for subdir, dirs, files in os.walk(rootdir + '/cohn-kanade-images'):
 	#print "3"
 	for file in files:
-		fname = path.join(subdir, file)
-		if 'DS_Store' not in fname and '.png' in fname:
-			img = cv2.imread(fname)
-			labelpath = fname[:-4] + '_emotion.txt'
-			img = get400(img)
+		fname = path.join(subdir, file).replace('\\','/')
+		labelpath = fname[:-4] + '_emotion.txt'
+		labelpath = labelpath.replace('/cohn-kanade-images', '/Emotion')
+		#print labelpath
+		if '.png' in fname:
 			
-print "test"
+			label = -1
+			try:
+				f = open(labelpath, 'r')
+				line = f.read()
+				label = int(line[3]) - 1
+			except:
+				pass
+			if label >= 0:
+				img = cv2.imread(fname)
+				img = get400(img)
+				if (img is not None):
+					count += 1
+					X.append(img)
+					y.append(label)
+					cv2.imwrite(rootdir + '/dataset/img' + str(count) + '.png', img)
+					if (count % 20 == 0): print 'Processed img ' + str(count)
+data = dict()
+data['X'] = X
+data['y'] = y
+pickle.dump(data, open( "dataset400.dat", "wb" ))
+print 'Dumped ' + str(count) + ' images'
 
 
 '''for subj in range(0,1000):
