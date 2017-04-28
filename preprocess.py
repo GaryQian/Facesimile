@@ -5,18 +5,6 @@ from os import path
 from os import walk
 from os import listdir
 import os
-from keras import backend as K
-from keras.datasets import cifar10
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import Dropout
-from keras.layers import Flatten
-from keras.constraints import maxnorm
-from keras.optimizers import SGD
-from keras.layers.convolutional import Convolution2D
-from keras.layers.convolutional import MaxPooling2D
-from keras.models import load_model
-from keras.utils import np_utils
 
 from imgProcessing import get400
 
