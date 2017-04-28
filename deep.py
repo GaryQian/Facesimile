@@ -35,8 +35,8 @@ np.random.seed(seed)
 
 # Load training data
 print 'Loading Training Data'
-rootdir = 'C:/Users/gary/Documents/1DOCUMENTS/Junior/ML/Facesimile'
-
+#rootdir = 'C:/Users/gary/Documents/1DOCUMENTS/Junior/ML/Facesimile'
+rootdir = './'
 X = []
 y = []
 count = 0
