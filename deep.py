@@ -39,32 +39,53 @@ print 'Loading Training Data'
 imgDim = 48
 #data = pickle.load(open('dataset400.dat','rb'))
 
-X_test = list()
+'''X_test = list()
 y_test = list()
 X_train = list()
 y_train = list()
+tc = dict()
+map = dict()
+for i in range(7):
+	tc[i] = 0
+	map[i] = i - 1
+map[0] = 0
 with open('./fer2013/fer2013.csv', 'rb') as csvfile:
 	spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
 	count = 0
 	for row in spamreader:
-		if row[2] == 'Training':
-			X_train.append(np.reshape(row[1].split(' '), (-1, imgDim)))
-			y_train.append(int(row[0]))
-		elif 'Test' in row[2]:
-			X_test.append(row[1].split(' '))
-			y_test.append(int(row[0]))
-		count += 1
-		if count % 2500 == 0:
-			print 'Loaded ' + str(count)
+		if row[0] != '1':
+			if row[2] == 'Training':
+				X_train.append(np.reshape(row[1].split(' '), (-1, imgDim)))
+				y_train.append(map[int(row[0])])
+				tc[int(row[0])] += 1
+			elif 'Test' in row[2]:
+				X_test.append(row[1].split(' '))
+				y_test.append(map[int(row[0])])
+				tc[int(row[0])] += 1
+			count += 1
+			if count % 2500 == 0:
+				print 'Loaded ' + str(count)
 
 print 'Done'
-print max(y_train)
+for i in range(7):
+	print str(i) + ' ' + str(tc[i])
 data = dict()
+data['X'] = X_train
+data['y'] = y_train
+pickle.dump(data, open( "datasettrain48.dat", "wb" ))
+data['X'] = X_test
+data['y'] = y_test
+pickle.dump(data, open( "datasettest48.dat", "wb" ))'''
+data = dict()
+data = pickle.load(open( "datasettrain48.dat", "rb" ))
+X_train = data['X']
+y_train = data['y']
 
-#X_train = data['X']
-#y_train = data['y']
+data = pickle.load(open( "datasettest48.dat", "rb" ))
+X_test = data['X']
+y_test = data['y']
 
-num_classes = 7
+num_classes = max(y_train) + 1
 
 '''for subj in range(0,1000):
 	subjstr = str(subj)
@@ -114,29 +135,8 @@ print 'Done'
 
 # Create the model
 print 'Constructing Model'
-'''#deeper model
-model = Sequential()
-model.add(Convolution2D(32, 3, 3, input_shape=(32, 32, 3), activation='relu', padding='same'))
-model.add(Dropout(0.2))
-model.add(Convolution2D(32, 3, 3, activation='relu', padding='same'))
-model.add(MaxPooling2D(pool_size=(2, 1)))
-model.add(Convolution2D(64, 3, 3, activation='relu', padding='same'))
-model.add(Dropout(0.2))
-model.add(Convolution2D(64, 3, 3, activation='relu', padding='same'))
-model.add(MaxPooling2D(pool_size=(2, 1)))
-model.add(Convolution2D(128, 3, 3, activation='relu', padding='same'))
-model.add(Dropout(0.2))
-model.add(Convolution2D(128, 3, 3, activation='relu', padding='same'))
-model.add(MaxPooling2D(pool_size=(2, 1)))
-model.add(Flatten())
-model.add(Dropout(0.2))
-model.add(Dense(1024, activation='relu', kernel_constraint=maxnorm(3)))
-model.add(Dropout(0.2))
-model.add(Dense(512, activation='relu', kernel_constraint=maxnorm(3)))
-model.add(Dropout(0.2))
-model.add(Dense(num_classes, activation='softmax'))'''
 
-
+'''
 #deeper model
 model = Sequential()
 model.add(Convolution2D(32, (3, 3), input_shape=(imgDim,imgDim, 1), activation='relu', padding='same'))
@@ -144,7 +144,7 @@ model.add(Convolution2D(32, (3, 3), input_shape=(imgDim,imgDim, 1), activation='
 model.add(Convolution2D(32, (3, 3), activation='relu', padding='same'))
 model.add(MaxPooling2D(pool_size=(2, 1)))
 model.add(Convolution2D(64, (3, 3), activation='relu', padding='same'))
-#model.add(Dropout(0.2))
+model.add(Dropout(0.1))
 model.add(Convolution2D(64, (3, 3), activation='relu', padding='same'))
 model.add(MaxPooling2D(pool_size=(2, 1)))
 model.add(Convolution2D(128, (3, 3), activation='relu', padding='same'))
@@ -156,32 +156,34 @@ model.add(Dropout(0.2))
 model.add(Convolution2D(256, (3, 3), activation='relu', padding='same'))
 model.add(MaxPooling2D(pool_size=(2, 1)))
 model.add(Flatten())
-model.add(Dropout(0.2))
-model.add(Dense(2048, activation='relu', kernel_constraint=maxnorm(5)))
+#model.add(Dropout(0.2))
+#model.add(Dense(2048, activation='relu', kernel_constraint=maxnorm(5)))
 model.add(Dropout(0.2))
 model.add(Dense(1024, activation='relu', kernel_constraint=maxnorm(5)))
 model.add(Dropout(0.2))
 model.add(Dense(512, activation='relu', kernel_constraint=maxnorm(5)))
 model.add(Dropout(0.2))
-model.add(Dense(num_classes, activation='softmax'))
+model.add(Dense(num_classes, activation='softmax'))'''
 
+
+model = load_model('modeldeep.dat')
 print 'Done'
-#model = load_model('model2deep.dat')
+
 
 print 'Compiling'
 # Compile model
-epochs = 70
+epochs = 200
 lrate = 0.01
 decay = lrate/epochs
 sgd = SGD(lr=lrate, momentum=0.9, decay=decay, nesterov=False)
-model.compile(loss='sparse_categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+#model.compile(loss='sparse_categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 print(model.summary())
 
 
 print 'Fitting model'
 # Fit the model
 #for i in range(len(X_train)):
-model.fit(X_train[:10000], y_train[:10000], batch_size=256, epochs=epochs, verbose=1, callbacks=[], validation_data=(X_train[:5000], y_train[:5000]), shuffle=True, class_weight=None, sample_weight=None)
+model.fit(X_train[5000:10000], y_train[5000:10000], batch_size=256, epochs=epochs, verbose=1, callbacks=[], validation_data=(X_train[:2000], y_train[:2000]), shuffle=True, class_weight=None, sample_weight=None)
 #model.fit(X_train, y_train, validation_data=(X_train, y_train), nb_epoch=epochs, batch_size=32)
 '''validation_split=0.2,'''
 print 'Done'
