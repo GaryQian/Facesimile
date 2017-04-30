@@ -5,6 +5,7 @@ from os import path
 from os import walk
 from os import listdir
 import os
+import csv
 from keras import backend as K
 from keras.datasets import cifar10
 from keras.models import Sequential
@@ -35,13 +36,33 @@ np.random.seed(seed)
 
 # Load training data
 print 'Loading Training Data'
-imgDim = 400
-data = pickle.load(open('dataset400.dat','rb'))
+imgDim = 48
+#data = pickle.load(open('dataset400.dat','rb'))
+
+X_test = list()
+y_test = list()
+X_train = list()
+y_train = list()
+with open('./fer2013/fer2013.csv', 'rb') as csvfile:
+	spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+	count = 0
+	for row in spamreader:
+		if row[2] == 'Training':
+			X_train.append(np.reshape(row[1].split(' '), (-1, imgDim)))
+			y_train.append(int(row[0]))
+		elif 'Test' in row[2]:
+			X_test.append(row[1].split(' '))
+			y_test.append(int(row[0]))
+		count += 1
+		if count % 2500 == 0:
+			print 'Loaded ' + str(count)
+
 print 'Done'
+print max(y_train)
+data = dict()
 
-
-X_train = data['X']
-y_train = data['y']
+#X_train = data['X']
+#y_train = data['y']
 
 num_classes = 7
 
@@ -118,37 +139,38 @@ model.add(Dense(num_classes, activation='softmax'))'''
 
 #deeper model
 model = Sequential()
-model.add(Convolution2D(32, (7, 3), input_shape=(400, 400, 1), activation='relu', padding='same'))
-model.add(Dropout(0.2))
-model.add(Convolution2D(32, (7, 3), activation='relu', padding='same'))
+model.add(Convolution2D(32, (3, 3), input_shape=(imgDim,imgDim, 1), activation='relu', padding='same'))
+#model.add(Dropout(0.2))
+model.add(Convolution2D(32, (3, 3), activation='relu', padding='same'))
 model.add(MaxPooling2D(pool_size=(2, 1)))
-model.add(Convolution2D(64, (7, 3), activation='relu', padding='same'))
-model.add(Dropout(0.2))
-model.add(Convolution2D(64, (7, 3), activation='relu', padding='same'))
+model.add(Convolution2D(64, (3, 3), activation='relu', padding='same'))
+#model.add(Dropout(0.2))
+model.add(Convolution2D(64, (3, 3), activation='relu', padding='same'))
 model.add(MaxPooling2D(pool_size=(2, 1)))
-model.add(Convolution2D(128, (7, 3), activation='relu', padding='same'))
-model.add(Dropout(0.2))
-model.add(Convolution2D(128, (7, 3), activation='relu', padding='same'))
+model.add(Convolution2D(128, (3, 3), activation='relu', padding='same'))
+#model.add(Dropout(0.2))
+model.add(Convolution2D(128, (3, 3), activation='relu', padding='same'))
 model.add(MaxPooling2D(pool_size=(2, 1)))
-model.add(Convolution2D(256, (7, 3), activation='relu', padding='same'))
+model.add(Convolution2D(256, (3, 3), activation='relu', padding='same'))
 model.add(Dropout(0.2))
-model.add(Convolution2D(256, (7, 3), activation='relu', padding='same'))
+model.add(Convolution2D(256, (3, 3), activation='relu', padding='same'))
 model.add(MaxPooling2D(pool_size=(2, 1)))
 model.add(Flatten())
-'''model.add(Dropout(0.2))
-model.add(Dense(2048, activation='relu', kernel_constraint=maxnorm(3)))'''
 model.add(Dropout(0.2))
-model.add(Dense(1024, activation='relu', kernel_constraint=maxnorm(3)))
+model.add(Dense(2048, activation='relu', kernel_constraint=maxnorm(5)))
 model.add(Dropout(0.2))
-model.add(Dense(512, activation='relu', kernel_constraint=maxnorm(3)))
+model.add(Dense(1024, activation='relu', kernel_constraint=maxnorm(5)))
+model.add(Dropout(0.2))
+model.add(Dense(512, activation='relu', kernel_constraint=maxnorm(5)))
 model.add(Dropout(0.2))
 model.add(Dense(num_classes, activation='softmax'))
 
 print 'Done'
 #model = load_model('model2deep.dat')
 
+print 'Compiling'
 # Compile model
-epochs = 25
+epochs = 70
 lrate = 0.01
 decay = lrate/epochs
 sgd = SGD(lr=lrate, momentum=0.9, decay=decay, nesterov=False)
@@ -156,12 +178,18 @@ model.compile(loss='sparse_categorical_crossentropy', optimizer=sgd, metrics=['a
 print(model.summary())
 
 
-
+print 'Fitting model'
 # Fit the model
 #for i in range(len(X_train)):
-model.fit(X_train[:], y_train, batch_size=5, epochs=epochs, verbose=1, callbacks=[], validation_split=0.3, shuffle=True, class_weight=None, sample_weight=None)
+model.fit(X_train[:10000], y_train[:10000], batch_size=256, epochs=epochs, verbose=1, callbacks=[], validation_data=(X_train[:5000], y_train[:5000]), shuffle=True, class_weight=None, sample_weight=None)
 #model.fit(X_train, y_train, validation_data=(X_train, y_train), nb_epoch=epochs, batch_size=32)
-model.save('model3deep.dat')
+'''validation_split=0.2,'''
+print 'Done'
+
+print 'Saving data'
+model.save('modeldeep.dat')
+
+print 'Done'
 
 print model.predict_proba(X_train[930:1000], batch_size=32, verbose=1)
 
