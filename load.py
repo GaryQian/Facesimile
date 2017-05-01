@@ -10,6 +10,7 @@ import os
 def loadData():
 	print "Loading Data..."
 	parts = 6
+
 	X_train = None
 	y_train = list()
 	for i in range(parts):
