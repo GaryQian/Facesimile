@@ -96,7 +96,7 @@ parts = 3
 for i in range(parts):
 	data = dict()
 	data['X'] = X_train[int(i*len(X_train)/parts):int((i+1)*len(X_train)/parts)]
-	data['y'] = X_train[int(i*len(X_train)/parts):int((i+1)*len(X_train)/parts)]
+	data['y'] = y_train[int(i*len(X_train)/parts):int((i+1)*len(X_train)/parts)]
 	pickle.dump(data, open( "datasettrain48-" + str(i) + ".dat", "wb" ))
 	
 data['X'] = X_test
