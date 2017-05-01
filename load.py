@@ -5,7 +5,7 @@ from os import walk
 from os import listdir
 import os
 
-
+#Import:  from load import loadData
 #USAGE: X_train, y_train, X_test, y_test, num_classes = loadData()
 #USAGE: X_train, y_train, X_test, y_test, num_classes = loadData(flatten=True, normalize=False, type='int32')
 def loadData(flatten=False, normalize=True, type='float32'):
