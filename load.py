@@ -7,7 +7,8 @@ import os
 
 
 #USAGE: X_train, y_train, X_test, y_test, num_classes = loadData()
-def loadData(flatten=False, normalize=True):
+#USAGE: X_train, y_train, X_test, y_test, num_classes = loadData(flatten=True, normalize=False, type='int32')
+def loadData(flatten=False, normalize=True, type='float32'):
 	print "Loading Data..."
 	parts = 6
 
@@ -41,14 +42,13 @@ def loadData(flatten=False, normalize=True):
 		X_test = temp2
 
 	
-	
+	X_train = np.array(X_train).astype(type)
+	X_test = np.array(X_test).astype(type)
 	if normalize:
 	#normalize
 		print '\tNormalizing'
-		X_train = np.array(X_train).astype('float32')
 		X_train = X_train / 255.0
 
-		X_test = np.array(X_test).astype('float32')
 		X_test = X_test / 255.0
 	print 'Done'
 	return (X_train, y_train, X_test, y_test, num_classes)
