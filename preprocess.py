@@ -14,7 +14,7 @@ seed = 7
 np.random.seed(seed)
 
 # Load training data
-print 'Loading Training Data'
+print 'Loading Cohn-Kanade'
 #rootdir = 'C:/Users/gary/Documents/1DOCUMENTS/Junior/ML/Facesimile'
 rootdir = './'
 X = []
@@ -49,4 +49,51 @@ data = dict()
 data['X'] = X
 data['y'] = y
 pickle.dump(data, open( "dataset400.dat", "wb" ))
-print 'Pickled ' + str(count) + ' images'
+print 'Done'
+
+
+
+##################################################################
+##################################################################
+##################################################################
+##################################################################
+
+
+print 'Loading FER2013'
+X_test = list()
+y_test = list()
+X_train = list()
+y_train = list()
+tc = dict()
+map = dict()
+for i in range(7):
+	tc[i] = 0
+	map[i] = i - 1
+map[0] = 0
+with open('./fer2013/fer2013.csv', 'rb') as csvfile:
+	spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+	count = 0
+	for row in spamreader:
+		if row[0] != '1':
+			if row[2] == 'Training':
+				X_train.append(np.reshape(row[1].split(' '), (-1, imgDim)))
+				y_train.append(map[int(row[0])])
+				tc[int(row[0])] += 1
+			elif 'Test' in row[2]:
+				X_test.append(np.reshape(row[1].split(' '), (-1, imgDim)))
+				y_test.append(map[int(row[0])])
+				tc[int(row[0])] += 1
+			count += 1
+			if count % 2500 == 0:
+				print 'Loaded ' + str(count)
+
+print 'Done'
+for i in range(7):
+	print str(i) + ' ' + str(tc[i])
+data = dict()
+data['X'] = X_train
+data['y'] = y_train
+pickle.dump(data, open( "datasettrain48.dat", "wb" ))
+data['X'] = X_test
+data['y'] = y_test
+pickle.dump(data, open( "datasettest48.dat", "wb" ))

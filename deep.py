@@ -59,7 +59,7 @@ with open('./fer2013/fer2013.csv', 'rb') as csvfile:
 				y_train.append(map[int(row[0])])
 				tc[int(row[0])] += 1
 			elif 'Test' in row[2]:
-				X_test.append(row[1].split(' '))
+				X_test.append(np.reshape(row[1].split(' '), (-1, imgDim)))
 				y_test.append(map[int(row[0])])
 				tc[int(row[0])] += 1
 			count += 1
@@ -76,6 +76,7 @@ pickle.dump(data, open( "datasettrain48.dat", "wb" ))
 data['X'] = X_test
 data['y'] = y_test
 pickle.dump(data, open( "datasettest48.dat", "wb" ))'''
+
 data = dict()
 data = pickle.load(open( "datasettrain48.dat", "rb" ))
 X_train = data['X']
@@ -87,35 +88,7 @@ y_test = data['y']
 
 num_classes = max(y_train) + 1
 
-'''for subj in range(0,1000):
-	subjstr = str(subj)
-	if (subj < 10): subjstr = '00' + subjstr
-	if (subj >= 10 and subj < 100): subjstr = '0' + subjstr
-	subjstr = 'S' + subjstr
-	for i in range(15):
-		samplestr = ''
-		if (i < 10): samplestr = '00' + str(i)
-		else: samplestr = '0' + str(i)
-		dir = rootdir + '/cohn-kanade-images' + '/' + subjstr + '/' + samplestr
-		fname = dir + '/' + subjstr + '_' + samplestr + '_' + '00000' + samplestr + '.png'
-		#print fname
-		if path.exists(fname):
-			pass
-			#labelpath = fname[:-4] + '_emotion.txt
-			#print labelpath'''
-'''num_classes = 2
-X_train = np.ndarray(shape0)
-y_train = np.ndarray((imNum0))
 
-for x in range(0, imNum1): #for each image in trainingData/0/*
-	fname = prestring1 + str(x) + postString
-	if path.exists(fname):
-		temp = cv2.imread(fname)
-		X_train[count] = temp
-		y_train[count] = 1
-
-		count += 1
-	'''
 print 'Preprocessing'
 #X_train = X_train[:count]
 #y_train = y_train[:count]
@@ -126,7 +99,12 @@ temp = np.zeros((X_train.shape[0],imgDim,imgDim,1))
 temp[:,:,:,0] = X_train[:,:,:]
 X_train = temp
 
-print X_train.shape
+X_test = np.array(X_test).astype('float32')
+X_test = X_test / 255.0
+temp = np.zeros((X_test.shape[0],imgDim,imgDim,1))
+temp[:,:,:,0] = X_test[:,:,:]
+X_test = temp
+
 # one hot encode outputs
 #y_train = y_train.reshape((-1, 1))
 #y_train = np_utils.to_categorical(y_train)
@@ -172,7 +150,7 @@ print 'Done'
 
 print 'Compiling'
 # Compile model
-epochs = 200
+epochs = 150
 lrate = 0.01
 decay = lrate/epochs
 sgd = SGD(lr=lrate, momentum=0.9, decay=decay, nesterov=False)
@@ -183,7 +161,7 @@ print(model.summary())
 print 'Fitting model'
 # Fit the model
 #for i in range(len(X_train)):
-model.fit(X_train[5000:10000], y_train[5000:10000], batch_size=256, epochs=epochs, verbose=1, callbacks=[], validation_data=(X_train[:2000], y_train[:2000]), shuffle=True, class_weight=None, sample_weight=None)
+model.fit(X_train[0:], y_train[0:], batch_size=256, epochs=epochs, verbose=1, callbacks=[], validation_data=(X_test[0:], y_test[0:]), shuffle=True, class_weight=None, sample_weight=None)
 #model.fit(X_train, y_train, validation_data=(X_train, y_train), nb_epoch=epochs, batch_size=32)
 '''validation_split=0.2,'''
 print 'Done'
