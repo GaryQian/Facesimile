@@ -5,6 +5,7 @@ from os import path
 from os import walk
 from os import listdir
 import os
+import csv
 
 from imgProcessing import get400
 
@@ -13,7 +14,7 @@ from imgProcessing import get400
 seed = 7
 np.random.seed(seed)
 
-# Load training data
+'''# Load training data
 print 'Loading Cohn-Kanade'
 #rootdir = 'C:/Users/gary/Documents/1DOCUMENTS/Junior/ML/Facesimile'
 rootdir = './'
@@ -50,7 +51,7 @@ data['X'] = X
 data['y'] = y
 pickle.dump(data, open( "dataset400.dat", "wb" ))
 print 'Done'
-
+'''
 
 
 ##################################################################
@@ -60,6 +61,7 @@ print 'Done'
 
 
 print 'Loading FER2013'
+imgDim = 48
 X_test = list()
 y_test = list()
 X_train = list()
@@ -88,12 +90,15 @@ with open('./fer2013/fer2013.csv', 'rb') as csvfile:
 				print 'Loaded ' + str(count)
 
 print 'Done'
-for i in range(7):
-	print str(i) + ' ' + str(tc[i])
-data = dict()
-data['X'] = X_train
-data['y'] = y_train
-pickle.dump(data, open( "datasettrain48.dat", "wb" ))
+#for i in range(7):
+	#print str(i) + ' ' + str(tc[i])
+parts = 3
+for i in range(parts):
+	data = dict()
+	data['X'] = X_train[int(i*len(X_train)/parts):int((i+1)*len(X_train)/parts)]
+	data['y'] = X_train[int(i*len(X_train)/parts):int((i+1)*len(X_train)/parts)]
+	pickle.dump(data, open( "datasettrain48-" + str(i) + ".dat", "wb" ))
+	
 data['X'] = X_test
 data['y'] = y_test
 pickle.dump(data, open( "datasettest48.dat", "wb" ))

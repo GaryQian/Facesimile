@@ -2,4 +2,7 @@
 *.pyc
 *.csv
 !modeldeep.dat
-
+!datasettrain48-0.dat
+!datasettrain48-1.dat
+!datasettrain48-2.dat
+!datasettest48.dat
