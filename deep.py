@@ -87,7 +87,7 @@ data = pickle.load(open( "datasettest48.dat", "rb" ))
 X_test = data['X']
 y_test = data['y']'''
 
-X_train, y_train, X_test, y_test, num_classes = loadData()
+X_train, y_train, X_test, y_test, num_classes = loadData(flatten=False)
 
 #num_classes = max(y_train) + 1
 

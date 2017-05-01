@@ -7,7 +7,7 @@ import os
 
 
 #USAGE: X_train, y_train, X_test, y_test, num_classes = loadData()
-def loadData():
+def loadData(flatten=False, normalize=True):
 	print "Loading Data..."
 	parts = 6
 
@@ -23,18 +23,32 @@ def loadData():
 			X_train = np.vstack((X_train,data['X']))
 			y_train = np.append(y_train,data['y'])
 		print '\tPart ' + str(i)
-
 	data = pickle.load(open( "datasettest48.dat", "rb" ))
-	X_test = data['X']
-	y_test = data['y']
+	X_test = np.array(data['X'])
+	y_test = np.array(data['y'])
 	num_classes = max(y_train) + 1
 	
-	#normalize
-	print '\tNormalizing'
-	X_train = np.array(X_train).astype('float32')
-	X_train = X_train / 255.0
+	
+	if flatten:
+		print '\tFlattening'
+		temp = list()
+		for i in range(len(X_train)):
+			temp.append(X_train[i].flatten())
+		X_train = temp
+		temp2 = list()
+		for i in range(len(X_test)):
+			temp2.append(X_test[i].flatten())
+		X_test = temp2
 
-	X_test = np.array(X_test).astype('float32')
-	X_test = X_test / 255.0
+	
+	
+	if normalize:
+	#normalize
+		print '\tNormalizing'
+		X_train = np.array(X_train).astype('float32')
+		X_train = X_train / 255.0
+
+		X_test = np.array(X_test).astype('float32')
+		X_test = X_test / 255.0
 	print 'Done'
 	return (X_train, y_train, X_test, y_test, num_classes)
