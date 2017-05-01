@@ -20,6 +20,7 @@ from keras.models import load_model
 from keras.utils import np_utils
 
 from imgProcessing import get400
+from load import loadData
 
 
 
@@ -77,30 +78,31 @@ data['X'] = X_test
 data['y'] = y_test
 pickle.dump(data, open( "datasettest48.dat", "wb" ))'''
 
-data = dict()
+'''data = dict()
 data = pickle.load(open( "datasettrain48.dat", "rb" ))
 X_train = data['X']
 y_train = data['y']
 
 data = pickle.load(open( "datasettest48.dat", "rb" ))
 X_test = data['X']
-y_test = data['y']
+y_test = data['y']'''
 
-num_classes = max(y_train) + 1
+X_train, y_train, X_test, y_test, num_classes = loadData()
+
+#num_classes = max(y_train) + 1
 
 
 print 'Preprocessing'
-#X_train = X_train[:count]
-#y_train = y_train[:count]
+
 # normalize inputs from 0-255 to 0.0-1.0
-X_train = np.array(X_train).astype('float32')
-X_train = X_train / 255.0
+#X_train = np.array(X_train).astype('float32')
+#X_train = X_train / 255.0
 temp = np.zeros((X_train.shape[0],imgDim,imgDim,1))
 temp[:,:,:,0] = X_train[:,:,:]
 X_train = temp
 
-X_test = np.array(X_test).astype('float32')
-X_test = X_test / 255.0
+#X_test = np.array(X_test).astype('float32')
+#X_test = X_test / 255.0
 temp = np.zeros((X_test.shape[0],imgDim,imgDim,1))
 temp[:,:,:,0] = X_test[:,:,:]
 X_test = temp
