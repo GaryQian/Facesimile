@@ -24,6 +24,7 @@ def loadData(flatten=False, normalize=True, type='float32'):
 			X_train = np.vstack((X_train,data['X']))
 			y_train = np.append(y_train,data['y'])
 		print '\tPart ' + str(i)
+	print '\tLoading Test'
 	data = pickle.load(open( "datasettest48.dat", "rb" ))
 	X_test = np.array(data['X'])
 	y_test = np.array(data['y'])
