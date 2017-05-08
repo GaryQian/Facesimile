@@ -14,6 +14,8 @@ from imgProcessing import get400
 seed = 7
 np.random.seed(seed)
 
+
+#cohn-kanade-images loading
 '''# Load training data
 print 'Loading Cohn-Kanade'
 #rootdir = 'C:/Users/gary/Documents/1DOCUMENTS/Junior/ML/Facesimile'
@@ -59,7 +61,7 @@ print 'Done'
 ##################################################################
 ##################################################################
 
-
+#FER2013 Loading
 print 'Loading FER2013'
 imgDim = 48
 X_test = list()
