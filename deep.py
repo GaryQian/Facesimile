@@ -87,27 +87,29 @@ model.add(Dense(512, activation='relu', kernel_constraint=maxnorm(5)))
 model.add(Dropout(0.2))
 model.add(Dense(num_classes, activation='softmax'))'''
 
-'''#Deeper model
+#Deeper model
 model = Sequential()
-model.add(Convolution2D(32, (3, 3), input_shape=(imgDim,imgDim, 1), activation='relu', padding='same'))
-model.add(Dropout(0.1))
-model.add(Convolution2D(32, (3, 3), activation='relu', padding='same'))
-model.add(Dropout(0.1))
-model.add(Convolution2D(32, (3, 3), activation='relu', padding='same'))
-model.add(MaxPooling2D(pool_size=(2, 1)))
-model.add(Convolution2D(64, (3, 3), activation='relu', padding='same'))
+model.add(Convolution2D(64, (3, 3), input_shape=(imgDim,imgDim, 1), activation='relu', padding='same'))
 model.add(Dropout(0.1))
 model.add(Convolution2D(64, (3, 3), activation='relu', padding='same'))
-model.add(Dropout(0.1))
+model.add(Dropout(0.2))
 model.add(Convolution2D(64, (3, 3), activation='relu', padding='same'))
 model.add(MaxPooling2D(pool_size=(2, 1)))
 model.add(Convolution2D(128, (3, 3), activation='relu', padding='same'))
-model.add(Dropout(0.1))
+model.add(Dropout(0.2))
+model.add(Convolution2D(128, (3, 3), activation='relu', padding='same'))
+model.add(Dropout(0.2))
 model.add(Convolution2D(128, (3, 3), activation='relu', padding='same'))
 model.add(MaxPooling2D(pool_size=(2, 1)))
 model.add(Convolution2D(256, (3, 3), activation='relu', padding='same'))
 model.add(Dropout(0.2))
 model.add(Convolution2D(256, (3, 3), activation='relu', padding='same'))
+model.add(Dropout(0.2))
+model.add(Convolution2D(256, (3, 3), activation='relu', padding='same'))
+model.add(MaxPooling2D(pool_size=(2, 1)))
+model.add(Convolution2D(512, (3, 3), activation='relu', padding='same'))
+model.add(Dropout(0.2))
+model.add(Convolution2D(512, (3, 3), activation='relu', padding='same'))
 model.add(MaxPooling2D(pool_size=(2, 1)))
 model.add(Flatten())
 model.add(Dropout(0.2))
@@ -117,7 +119,9 @@ model.add(Dense(1024, activation='relu', kernel_constraint=maxnorm(5)))
 model.add(Dropout(0.2))
 model.add(Dense(512, activation='relu', kernel_constraint=maxnorm(5)))
 model.add(Dropout(0.2))
-model.add(Dense(num_classes, activation='softmax'))'''
+model.add(Dense(256, activation='relu', kernel_constraint=maxnorm(5)))
+model.add(Dropout(0.2))
+model.add(Dense(num_classes, activation='softmax'))
 
 modelName = 'modeldeeper.dat'
 model = load_model(modelName)
@@ -126,8 +130,8 @@ print 'Done'
 
 print 'Compiling'
 # Compile model
-epochs = 100
-lrate = 0.02
+epochs = 25
+lrate = 0.04
 decay = lrate/epochs
 sgd = SGD(lr=lrate, momentum=0.9, decay=decay, nesterov=False)
 #Wsave = model.get_weights()
@@ -139,7 +143,7 @@ print(model.summary())
 print 'Fitting model'
 # Fit the model
 #for i in range(len(X_train)):
-model.fit(X_train[0:10000], y_train[0:10000], batch_size=256, epochs=epochs, verbose=1, callbacks=[], validation_data=(X_test[0:3000], y_test[0:3000]), shuffle=True, class_weight=None, sample_weight=None)
+model.fit(X_train[0:5000], y_train[0:5000], batch_size=256, epochs=epochs, verbose=1, callbacks=[], validation_data=(X_test[0:3000], y_test[0:3000]), shuffle=True, class_weight=None, sample_weight=None)
 #model.fit(X_train, y_train, validation_data=(X_train, y_train), nb_epoch=epochs, batch_size=32)
 '''validation_split=0.2,'''
 print 'Done'
