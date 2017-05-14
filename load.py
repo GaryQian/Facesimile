@@ -33,14 +33,16 @@ def loadData(flatten=False, normalize=True, type='float32'):
 	
 	if flatten:
 		print '\tFlattening'
-		temp = list()
-		for i in range(len(X_train)):
-			temp.append(X_train[i].flatten())
-		X_train = temp
-		temp2 = list()
-		for i in range(len(X_test)):
-			temp2.append(X_test[i].flatten())
-		X_test = temp2
+		#temp = list()
+		#for i in range(len(X_train)):
+		#	temp.append(X_train[i].flatten())
+		#X_train = temp
+		#temp2 = list()
+		#for i in range(len(X_test)):
+		#	temp2.append(X_test[i].flatten())
+		#X_test = temp2
+		X_train = X_train.reshape(X_train.shape[0], X_train.shape[1]*X_train.shape[2]) 
+		X_test = X_test.reshape(X_test.shape[0], X_test.shape[1]*X_test.shape[2])
 
 	
 	X_train = np.array(X_train).astype(type)
