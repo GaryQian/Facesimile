@@ -46,7 +46,6 @@ pca = PCA(n_components=n_components, svd_solver='randomized',
 print("done in %0.3fs" % (time() - t0))
 
 eigenfaces = pca.components_.reshape((n_components, 48, 48))
-cv2.imwrite('eigenface.png',eigenfaces[0])
 
 
 print("Projecting the input data on the eigenfaces orthonormal basis")
