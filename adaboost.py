@@ -20,6 +20,10 @@ imgDim = 48
 print(X_train)
 print(y_train)
 print(X_train.shape)
+print("X test")
+print(X_test)
+print("Y test")
+print(y_test)
 
 '''#normalize inputs to 0.0-1.0 (from 0-255)
 temp = np.zeros((X_train.shape[0],imgDim,imgDim,1))
@@ -38,11 +42,12 @@ mod = AdaBoostClassifier(n_estimators = 100, random_state = rand)
 
 mod.fit(X_train, y_train)
 
-total = len(y_test) 
+total = len(y_test)
 success = 0.0
-for x, y in X_test, y_test:
-	pred = mod.predict(x) 
+for x, y in zip(X_test, y_test):
+
+	pred = mod.predict(x)
 	if pred == y:
 		success += 1.0
 
-print("Success rate: " + success/total)
+print("Success rate: " + str(success/total))
