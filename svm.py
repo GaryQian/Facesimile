@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cPickle as pickle
 from load import loadData
+import cv2
+
 
 
 from sklearn.model_selection import train_test_split
@@ -44,9 +46,39 @@ pca = PCA(n_components=n_components, svd_solver='randomized',
 print("done in %0.3fs" % (time() - t0))
 
 eigenfaces = pca.components_.reshape((n_components, 48, 48))
+cv2.imwrite('eigenface.png',eigenfaces[0])
+
 
 print("Projecting the input data on the eigenfaces orthonormal basis")
 t0 = time()
 X_train_pca = pca.transform(X)
 X_test_pca = pca.transform(X_test)
 print("done in %0.3fs" % (time() - t0))
+
+# Beginning SVM model fitting
+print("Fitting the classifier to the training set")
+t0 = time()
+
+# Full parameter grid below 
+#param_grid = {'C': [1e3, 5e3, 1e4, 5e4, 1e5],
+#              'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1], }
+
+# Single parameter for testing
+param_grid = {'C': [5e3],
+              'gamma': [0.0005], }
+clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
+clf = clf.fit(X_train_pca, y)
+print("done in %0.3fs" % (time() - t0))
+print("Best estimator found by grid search:")
+print(clf.best_estimator_)
+
+# Printing results of trained model on test data
+print("Predicting people's names on the test set")
+t0 = time()
+y_pred = clf.predict(X_test_pca)
+print("done in %0.3fs" % (time() - t0))
+
+print(classification_report(y_test, y_pred, target_names=target_names))
+print(confusion_matrix(y_test, y_pred, labels=range(n_classes)))
+
+
