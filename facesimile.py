@@ -15,6 +15,13 @@ print("Complete")
 # Capture video from computer camera
 cap = cv2.VideoCapture(0)
 
+name = dict()
+name['0'] = 'Angery'
+name['1'] = 'Fear'
+name['2'] = 'Happy'
+name['3'] = 'Sad'
+name['4'] = ':o'
+name['5'] = ':|'
 
 # Run program till q is pressed
 while(True):
@@ -25,7 +32,7 @@ while(True):
 	#frame = cv2.imread("eigenface0.png")
 
 	# Locate the face in the image
-	face = getBox(frame, 100)
+	face = getBox(frame, 150)
 
 	# If a face is found
 	if (face != None):
@@ -42,7 +49,7 @@ while(True):
 		# Overlay prediction on output image
 		font = cv2.FONT_HERSHEY_SIMPLEX
 		cv2.imshow('Face Frame',face)
-		cv2.putText(frame,str(pred),(40,40), font, 1,(255,0,0),2)
+		cv2.putText(frame,name[str(pred[0])],(40,40), font, 1,(255,0,0),2)
 
 	# Display the resulting frame
 	#cv2.imwrite("prediction.png",frame)
