@@ -8,8 +8,6 @@ import cPickle as pickle
 from load import loadData
 import cv2
 
-
-
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV
 from sklearn.datasets import fetch_lfw_people
@@ -27,13 +25,19 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 data = pickle.load(open( "dataset400.dat", "rb" ))
 
 X, y, X_test, y_test, num_classes = loadData(flatten=True, normalize=False, type='int32')
+#X = X[0::3]
+#y = y[0::3]
+#X_test = X_test[1::2]
+#y_test = y_test[1::2]
 
 # Printing info from the loaded data
 n_features = X.shape[1]
 n_points = y.shape[0]
+n_test = y_test.shape[0]
 print("Total dataset size:")
 print("n_features: %d" % n_features)
-print("n_datapoints: %d" % n_points)
+print("n_trainpoints: %d" % n_points)
+print("n_testpoints: %d" % n_test)
 
 # Carrying out PCA/Eigenfaces, dimensionality reduction for our data
 n_components = 150
@@ -53,6 +57,8 @@ t0 = time()
 X_train_pca = pca.transform(X)
 X_test_pca = pca.transform(X_test)
 print("done in %0.3fs" % (time() - t0))
+print("n_PCAfeatures: %d" % X_train_pca.shape[1])
+
 
 # Beginning SVM model fitting
 print("Fitting the classifier to the training set")
@@ -63,8 +69,9 @@ t0 = time()
 #              'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1], }
 
 # Single parameter for testing
-param_grid = {'C': [5e3],
-              'gamma': [0.0005], }
+param_grid = {'C': [5],
+              'gamma': [0.005], }
+
 clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
 clf = clf.fit(X_train_pca, y)
 print("done in %0.3fs" % (time() - t0))
@@ -79,5 +86,7 @@ print("done in %0.3fs" % (time() - t0))
 
 print(classification_report(y_test, y_pred))
 print(confusion_matrix(y_test, y_pred)) # , labels=range(6)))
-
-
+cv2.imwrite('eigenface0.png',eigenfaces[0].reshape((48, 48)) )
+cv2.imwrite('eigenface1.png',eigenfaces[1].reshape((48, 48)) )
+cv2.imwrite('eigenface2.png',eigenfaces[2].reshape((48, 48)) )
+cv2.imwrite('eigenface3.png',eigenfaces[3].reshape((48, 48)) )
