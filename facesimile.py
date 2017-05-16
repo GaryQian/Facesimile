@@ -42,10 +42,12 @@ while(True):
 		# Overlay prediction on output image
 		font = cv2.FONT_HERSHEY_SIMPLEX
 		cv2.putText(img,pred,(10,10), font, 1,(255,255,255),2)
+		cv2.imshow('Face Frame',face)
+
 
 	# Display the resulting frame
 	#cv2.imwrite("prediction.png",frame)
-	cv2.imshow('Camera Alignment Assistant',frame)
+	cv2.imshow('Unregistered Hypercam 3',frame)
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
 
