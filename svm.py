@@ -91,3 +91,7 @@ cv2.imwrite('eigenface0.png',eigenfaces[0].reshape((48, 48)) )
 cv2.imwrite('eigenface1.png',eigenfaces[1].reshape((48, 48)) )
 cv2.imwrite('eigenface2.png',eigenfaces[2].reshape((48, 48)) )
 cv2.imwrite('eigenface3.png',eigenfaces[3].reshape((48, 48)) )
+
+# Write out data to files
+pickle.dump(pca, open( "PCA.dat", "wb" )) # PCA components
+pickle.dump(clf, open( "SVM.dat", "wb" )) # SVM model
