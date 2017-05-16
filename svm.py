@@ -86,6 +86,7 @@ print("done in %0.3fs" % (time() - t0))
 
 print(classification_report(y_test, y_pred))
 print(confusion_matrix(y_test, y_pred)) # , labels=range(6)))
+print(eigenfaces[0])
 cv2.imwrite('eigenface0.png',eigenfaces[0].reshape((48, 48)) )
 cv2.imwrite('eigenface1.png',eigenfaces[1].reshape((48, 48)) )
 cv2.imwrite('eigenface2.png',eigenfaces[2].reshape((48, 48)) )
