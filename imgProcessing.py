@@ -65,9 +65,3 @@ def getBox(img,size):
 
 	# Write image, this is just for testing.
 	return crop_img
-
-# For testing
-#img = cv2.imread("test.png")
-#crop_img = get400(img)
-#cv2.imwrite('testOuput.png',crop_img)
-#print("Complete")

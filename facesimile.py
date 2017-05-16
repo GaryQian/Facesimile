@@ -15,6 +15,7 @@ print("Complete")
 # Capture video from computer camera
 cap = cv2.VideoCapture(0)
 
+# Define facial expressions
 name = dict()
 name['0'] = 'Angery'
 name['1'] = 'Fear'
@@ -25,18 +26,15 @@ name['5'] = ':|'
 
 # Run program till q is pressed
 while(True):
-#if(True):
 
 	# Capture frame-by-frame
 	ret, frame = cap.read()
-	#frame = cv2.imread("eigenface0.png")
 
 	# Locate the face in the image
 	face = getBox(frame, 150)
 
 	# If a face is found
 	if (face != None):
-		# Resize face to proper size
 		res = cv2.resize(face,(48, 48), interpolation = cv2.INTER_CUBIC)
 		res = res.reshape(1, 48*48)
 
@@ -45,15 +43,16 @@ while(True):
 
 		# Use post pca image to predict output using svm
 		pred = SVM.predict(X)
-		#print frame.shape
+
 		# Overlay prediction on output image
 		font = cv2.FONT_HERSHEY_SIMPLEX
 		cv2.imshow('Face Frame',face)
 		cv2.putText(frame,name[str(pred[0])],(40,40), font, 1,(255,0,0),2)
 
 	# Display the resulting frame
-	#cv2.imwrite("prediction.png",frame)
 	cv2.imshow('Unregistered Hypercam 3',frame)
+
+	# Break loop
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
 
