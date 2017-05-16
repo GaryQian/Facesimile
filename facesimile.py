@@ -4,7 +4,7 @@ import cPickle as pickle
 
 from sklearn.decomposition import PCA
 from sklearn.svm import SVC
-from imgProcessing import get400
+from imgProcessing import getBox
 
 # Load trained SVM Model
 print("Loading trained SVM Model and PCA information...")
@@ -25,7 +25,7 @@ while(True):
 	#frame = cv2.imread("eigenface0.png")
 
 	# Locate the face in the image
-	face = get400(frame)
+	face = getBox(frame, 100)
 
 	# If a face is found
 	if (face != None):
@@ -38,10 +38,10 @@ while(True):
 
 		# Use post pca image to predict output using svm
 		pred = SVM.predict(X)
-	
+		#print frame.shape
 		# Overlay prediction on output image
 		font = cv2.FONT_HERSHEY_SIMPLEX
-		cv2.putText(img,pred,(10,10), font, 1,(255,255,255),2)
+		cv2.putText(frame,str(pred),(40,40), font, 1,(255,0,0),2)
 
 	# Display the resulting frame
 	#cv2.imwrite("prediction.png",frame)
