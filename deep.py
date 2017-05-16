@@ -183,14 +183,14 @@ model.add(Dense(256, activation='relu', kernel_constraint=maxnorm(5)))
 model.add(Dropout(0.2))
 model.add(Dense(num_classes, activation='softmax'))'''
 
-modelName = 'modelmed.dat'
-#model = load_model(modelName)
+modelName = 'modelshallow.dat111'
+model = load_model(modelName)
 print 'Done'
 
 
 print 'Compiling'
 # Compile model
-epochs = 100
+epochs = 50
 lrate = 0.04
 decay = lrate/epochs
 sgd = SGD(lr=lrate, momentum=0.9, decay=decay, nesterov=False)
@@ -203,7 +203,7 @@ print(model.summary())
 print 'Fitting model'
 # Fit the model
 #for i in range(len(X_train)):
-model.fit(X_train[0:], y_train[0:], batch_size=256, epochs=epochs, verbose=1, callbacks=[], validation_split=0.2,  shuffle=True, class_weight=None, sample_weight=None)
+model.fit(X_train[0:], y_train[0:], batch_size=256, epochs=epochs, verbose=1, callbacks=[], validation_data=(X_test[0:], y_test[0:]),   shuffle=True, class_weight=None, sample_weight=None)
 #model.fit(X_train, y_train, validation_data=(X_train, y_train), nb_epoch=epochs, batch_size=32)
 '''validation_split=0.2,'''
 '''validation_data=(X_test[0:], y_test[0:]), '''
