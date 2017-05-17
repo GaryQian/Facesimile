@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 import cPickle as pickle
-
+from time import time
 from sklearn.decomposition import PCA
 from sklearn.svm import SVC
 from imgProcessing import getBox
@@ -25,6 +25,7 @@ name['4'] = ':o'
 name['5'] = ':|'
 
 # Run program till q is pressed
+t = time()
 while(True):
 
 	# Capture frame-by-frame
@@ -48,7 +49,8 @@ while(True):
 		font = cv2.FONT_HERSHEY_SIMPLEX
 		cv2.imshow('Face Frame',face)
 		cv2.putText(frame,name[str(pred[0])],(40,40), font, 1,(255,0,0),2)
-
+	print time() - t
+	t = time()
 	# Display the resulting frame
 	cv2.imshow('Unregistered Hypercam 3',frame)
 
