@@ -42,8 +42,7 @@ print("n_testpoints: %d" % n_test)
 # Carrying out PCA/Eigenfaces, dimensionality reduction for our data
 n_components = 150
 
-print("Extracting the top %d eigenfaces from %d faces"
-      % (n_components, X.shape[0]))
+print("Extracting the top %d eigenfaces from %d faces" % (n_components))
 pca = PCA(n_components=n_components, svd_solver='randomized',
           whiten=True).fit(X)
 print("done")
@@ -68,11 +67,11 @@ print("n_PCAfeatures: %d" % X_train_pca.shape[1])
 # Beginning SVM model fitting
 print("Fitting the classifier to the training set")
 
-# Full parameter grid below 
+# Full parameter grid below, used to find best params
 #param_grid = {'C': [1e3, 5e3, 1e4, 5e4, 1e5],
 #              'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1], }
 
-# Single parameter for testing
+# Single parameter for testing, used once best params found
 param_grid = {'C': [5],
               'gamma': [0.005], }
 
@@ -88,8 +87,6 @@ y_pred = clf.predict(X_test_pca)
 print("done")
 print(classification_report(y_test, y_pred))
 print(confusion_matrix(y_test, y_pred)) 
-
-
 
 # Write out data to files
 pickle.dump(pca, open( "PCA.dat", "wb" )) # PCA components
