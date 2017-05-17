@@ -49,7 +49,14 @@ pca = PCA(n_components=n_components, svd_solver='randomized',
 print("done")
 
 eigenfaces = pca.components_.reshape((n_components, 48, 48))
+print(eigenfaces[0])
 
+# Writing out the most important eigenface
+for i in range(20):
+	out = eigenfaces[i]
+	out = out - np.amin(out)
+	out = out * (254/np.amax(out))
+	cv2.imwrite('eigenface'+str(i)+'.png',out.reshape((48, 48)))
 
 print("Projecting the input data on the eigenfaces orthonormal basis")
 X_train_pca = pca.transform(X)
@@ -79,9 +86,10 @@ print(clf.best_estimator_)
 print("Predicting people's names on the test set")
 y_pred = clf.predict(X_test_pca)
 print("done")
-
 print(classification_report(y_test, y_pred))
 print(confusion_matrix(y_test, y_pred)) 
+
+
 
 # Write out data to files
 pickle.dump(pca, open( "PCA.dat", "wb" )) # PCA components
